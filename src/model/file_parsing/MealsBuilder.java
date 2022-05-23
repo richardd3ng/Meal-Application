@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class IngredientsBuilder {
+public class MealsBuilder {
     private static final String INGREDIENTS_DIRECTORY = "data/ingredients/";
     private static final String DAIRY_DIRECTORY = "dairy";
 
@@ -18,7 +18,10 @@ public class IngredientsBuilder {
 
     public final Map<String, FoodInterface> INGREDIENTS = new HashMap<>();
 
-    public IngredientsBuilder() {
+//    public static buildMeals() {
+//
+//    }
+    private void buildIngredients() {
 
     }
 }

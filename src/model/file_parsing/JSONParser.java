@@ -1,4 +1,4 @@
-package model;
+package model.file_parsing;
 
 import com.google.gson.JsonObject;
 import org.json.JSONException;
