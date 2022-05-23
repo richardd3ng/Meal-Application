@@ -8,9 +8,12 @@ import java.util.Map;
 import static model.examples.Ingredients.*;
 
 public class Dishes {
+    public static final String DEFAULT_SERVING_DESCRIPTION = "Serves 1";
+
+    // BREAKFAST
     public static final FoodInterface OMELETTE = new Food(
             "Omelette",
-            "Serves 1",
+            DEFAULT_SERVING_DESCRIPTION,
             Map.of(
                     EGG, 2.0,
                     EGG_WHITE, 0.25,
@@ -22,9 +25,21 @@ public class Dishes {
             )
     );
 
+    public static final FoodInterface SCRAMBLED_EGGS = new Food(
+        "Scrambled Eggs",
+            DEFAULT_SERVING_DESCRIPTION,
+            Map.of(
+                    EGG, 2.0,
+                    EGG_WHITE, 0.25,
+                    SPRING_ONION, 1.0,
+                    OLIVE_OIL, 1.0
+            )
+    );
+
+    // LUNCH/DINNER
     public static final FoodInterface GRILLED_CHICKEN = new Food(
             "Grilled Chicken Breast",
-            "Serves 1",
+            DEFAULT_SERVING_DESCRIPTION,
             Map.of(
                     CHICKEN_BREAST, 1.5,
                     OLIVE_OIL, 1.0
@@ -33,7 +48,7 @@ public class Dishes {
 
     public static final FoodInterface TURKEY_SANDWICH = new Food(
             "Turkey Sandwich",
-            "Serves 1",
+            DEFAULT_SERVING_DESCRIPTION,
             Map.of(
                     TOAST, 2.0,
                     TURKEY_BREAST, 2.0,

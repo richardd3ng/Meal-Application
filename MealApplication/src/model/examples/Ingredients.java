@@ -12,7 +12,7 @@ public class Ingredients {
     public static final FoodInterface SWISS_CHEESE = new Food("Swiss Cheese", "1 Slice (21 g)", 50, 2.5, 1.5, 7);
     public static final FoodInterface EGG_WHITE = new Food("Egg Whites", "1 Carton (30 Tbsp)", 250, 0.0, 0, 50);
     public static final FoodInterface MILK = new Food("2% Milk", "1 cup", 140, 5, 3, 10);
-    public static final FoodInterface GREEK_YOGURT = new Food("Chobani Plain", "1 container", 80, 0, 0, 14);
+    public static final FoodInterface GREEK_YOGURT = new Food("Chobani Plain Yogurt", "1 container", 80, 0, 0, 14);
 
     // FATS
     public static final FoodInterface OLIVE_OIL = new Food("Extra Virgin Olive Oil", "1 Tbsp", 120, 14, 2, 0);
@@ -28,7 +28,7 @@ public class Ingredients {
     public static final FoodInterface LETTUCE = new Food("Lettuce", "1 Cup Shredded (36 g)", 5, 0.1, 0, 0.5);
 
     // GRAINS
-    public static final FoodInterface TOAST = new Food("Wheat Bread", "1 Slice", 120, 1.5, 0, 7);
+    public static final FoodInterface TOAST = new Food("Wheat Toast", "1 Slice", 120, 1.5, 0, 7);
 
     // MEAT
     public static final FoodInterface CHICKEN_BREAST = new Food("Chicken Breast", "1 Breast (6 oz)", 284, 6.2, 1.8, 54);
