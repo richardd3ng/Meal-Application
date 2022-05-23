@@ -12,13 +12,17 @@ import java.util.Scanner;
 
 public class JSONParser {
 
+    public static JSONObject pathToJSON(String jsonFilePath) {
+        return loadFile(new File(jsonFilePath));
+    }
+
     /**
      * takes in a json file and then outputs a jsonobject object.
      *
      * @param file - file object of a json file
      * @return a jsonobject object
      */
-    public static JSONObject loadFile(File file) {
+    private static JSONObject loadFile(File file) {
         String currFileString = null;
         try {
             currFileString = readFile(file);
