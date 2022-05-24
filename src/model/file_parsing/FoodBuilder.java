@@ -1,7 +1,7 @@
 package model.file_parsing;
 
-import model.Food;
-import model.FoodInterface;
+import model.food.Food;
+import model.food.FoodInterface;
 import org.json.JSONException;
 import org.json.JSONObject;
 

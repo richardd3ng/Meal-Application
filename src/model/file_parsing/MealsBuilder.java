@@ -1,6 +1,6 @@
 package model.file_parsing;
 
-import model.FoodInterface;
+import model.food.FoodInterface;
 
 import java.io.File;
 import java.util.*;

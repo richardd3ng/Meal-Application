@@ -1,4 +1,4 @@
-package model;
+package model.food;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,7 +38,7 @@ public class NutritionFacts {
     public void printNutritionFacts() {
         System.out.println(String.format("%s\nServing Description: %s", name, servingDescription));
         for (String statName : nutritionFactsMap.keySet()) {
-            System.out.println(String.format("%s: %s", statName, nutritionFactsMap.get(statName)));
+            System.out.println(String.format("%s: %.2f", statName, nutritionFactsMap.get(statName)));
         }
         System.out.println();
     }
