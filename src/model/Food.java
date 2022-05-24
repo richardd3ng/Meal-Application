@@ -26,18 +26,22 @@ public class Food implements FoodInterface {
         return servingDescription;
     }
 
+    @Override
     public double getCalories() {
         return calories;
     }
 
+    @Override
     public double getTotalFat() {
         return totalFat;
     }
 
+    @Override
     public double getSaturatedFat() {
         return saturatedFat;
     }
 
+    @Override
     public double getProtein() {
         return protein;
     }

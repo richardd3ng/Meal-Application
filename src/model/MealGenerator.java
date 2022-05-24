@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MealGenerator {
-    private static final boolean DEBUG = false;
-
     private static final int BREAKFAST_INDEX = 0;
     private static final int LUNCH_INDEX = 1;
     private static final int DINNER_INDEX = 2;
@@ -20,22 +18,17 @@ public class MealGenerator {
 
     private List<List<List<FoodInterface>>> combinations;
 
-    public MealGenerator(List<FoodInterface> breakfastOptions, List<FoodInterface> lunchOptions, List<FoodInterface> dinnerOptions, List<FoodInterface> snackOptions, int minProtein, int minCalories, int maxCalories) {
+    public MealGenerator(List<FoodInterface> breakfastOptions, List<FoodInterface> lunchOptions, List<FoodInterface> dinnerOptions, List<FoodInterface> snackOptions,
+                         int minCalories, int maxCalories, int minProtein) {
         this.combinations = new ArrayList<>();
         generateCombinations(breakfastOptions, lunchOptions, dinnerOptions, snackOptions,
-                maxCalories, minCalories, minProtein, 0, 0,
+                minCalories, maxCalories, minProtein, 0, 0,
                 0, 0, 0, 0, BREAKFAST_INDEX,
                 new ArrayList<>(), new ArrayList<>());
-        if (DEBUG) {
-            System.out.println(String.format("# combinations: %d", combinations.size()));
-            for (List<List<FoodInterface>> day : combinations) {
-                printDay(day);
-            }
-        }
     }
 
     private void generateCombinations(List<FoodInterface> breakfastOptions, List<FoodInterface> lunchOptions, List<FoodInterface> dinnerOptions, List<FoodInterface> snackOptions,
-                                      int maxCalories, int minCalories, int minProtein, int currProtein, int currCalories,
+                                      int minCalories, int maxCalories, int minProtein, int currProtein, int currCalories,
                                       int breakfastIdx, int lunchIdx, int dinnerIdx, int snackIdx, int mealIdx,
                                       List<FoodInterface> currMeal, List<List<FoodInterface>> currDay) {
         if (mealIdx > SNACK_INDEX + 1 || currDay.size() > 4) {
@@ -74,13 +67,13 @@ public class MealGenerator {
             int nextDinnerIdx = mealIdx == DINNER_INDEX ? i + 1 : i;
             int nextSnackIdx = mealIdx == SNACK_INDEX ? i + 1 : i;
             generateCombinations(options, lunchOptions, dinnerOptions, snackOptions,
-                    maxCalories, minCalories, minProtein, currProtein, currCalories,
+                    minCalories, maxCalories, minProtein, currProtein, currCalories,
                     nextBreakFastIdx, nextLunchIdx, nextDinnerIdx, nextSnackIdx, mealIdx,
                     currMeal, currDay);
             if (currMeal.size() > 0) {
                 currDay.add(new ArrayList<>(currMeal));
                 generateCombinations(options, lunchOptions, dinnerOptions, snackOptions,
-                        maxCalories, minCalories, minProtein, currProtein, currCalories,
+                        minCalories, maxCalories, minProtein, currProtein, currCalories,
                         breakfastIdx, lunchIdx, dinnerIdx, snackIdx, mealIdx + 1,
                         new ArrayList<>(), currDay);
                 currDay.remove(currDay.size() - 1);
@@ -88,6 +81,19 @@ public class MealGenerator {
             currCalories -= foodItem.getCalories();
             currProtein -= foodItem.getProtein();
             currMeal.remove(currMeal.size() - 1);
+        }
+    }
+
+    public List<List<FoodInterface>> getRandomCombination() {
+        List<List<FoodInterface>> randCombo = combinations.get((int) (Math.random() * combinations.size()));
+        printCombination(randCombo);
+        return randCombo;
+    }
+
+    public void printAllCombinations() {
+        System.out.println(String.format("# combinations: %d", combinations.size()));
+        for (List<List<FoodInterface>> day : combinations) {
+            printDay(day);
         }
     }
 
@@ -114,11 +120,7 @@ public class MealGenerator {
         System.out.print("}");
     }
 
-    public List<List<FoodInterface>> getRandomCombination() {
-        List<List<FoodInterface>> randCombo = combinations.get((int) (Math.random() * combinations.size()));
-        printCombination(randCombo);
-        return randCombo;
-    }
+
 
     private void printCombination(List<List<FoodInterface>> combination) {
         FoodInterface breakfast = makeMeal(BREAKFAST_DESCRIPTION, combination.get(BREAKFAST_INDEX));
@@ -127,11 +129,9 @@ public class MealGenerator {
         FoodInterface snack = makeMeal(SNACK_DESCRIPTION, combination.get(SNACK_INDEX));
         FoodInterface dayTotal = makeMeal(DAY_DESCRIPTION, List.of(breakfast, lunch, dinner, snack));
         breakfast.printNutritionFacts();
-        System.out.println();
         lunch.printNutritionFacts();
-        System.out.println();
         dinner.printNutritionFacts();
-        System.out.println();
+        snack.printNutritionFacts();
         dayTotal.printNutritionFacts();
     }
 

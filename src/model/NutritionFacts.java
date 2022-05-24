@@ -8,10 +8,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class NutritionFacts {
-    private FoodInterface food;
     private String name;
     private String servingDescription;
-
     private Map<String, Double> nutritionFactsMap;
 
     private static final ResourceBundle NUTRITION_FACT_GETTERS = ResourceBundle.getBundle("model.resources.NutritionFactGetters");
@@ -19,13 +17,12 @@ public class NutritionFacts {
     private static final List<String> NUTRITION_PROPERTIES_KEYS = List.of("calories", "total_fat", "saturated_fat", "protein");
 
     public NutritionFacts(FoodInterface food) {
-        this.food = food;
         this.name = food.getName();
         this.servingDescription = food.getDescription();
-        this.nutritionFactsMap = generateNutritionFactsMap();
+        this.nutritionFactsMap = generateNutritionFactsMap(food);
     }
 
-    private Map<String, Double> generateNutritionFactsMap() {
+    private Map<String, Double> generateNutritionFactsMap(FoodInterface food) {
         Map<String, Double> nutritionFactsMap = new LinkedHashMap<>();
         try {
             for (String propertiesKey : NUTRITION_PROPERTIES_KEYS) {
@@ -43,5 +40,6 @@ public class NutritionFacts {
         for (String statName : nutritionFactsMap.keySet()) {
             System.out.println(String.format("%s: %s", statName, nutritionFactsMap.get(statName)));
         }
+        System.out.println();
     }
 }

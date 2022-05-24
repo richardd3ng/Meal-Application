@@ -1,0 +1,12 @@
+{
+  "Name": "Scrambled Eggs",
+  "Serving Description": "Serves 1",
+  "Ingredients": {
+    "Egg": 2.0,
+    "Egg Whites": 0.25,
+    "Tomato": 1.0,
+    "Mushroom": 1.0,
+    "Spring Onion": 1.0,
+    "Olive Oil": 1.0
+  }
+}
