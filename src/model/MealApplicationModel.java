@@ -12,7 +12,7 @@ public class MealApplicationModel {
     public MealApplicationModel(int minCalories, int maxCalories, int maxTotalFat, int minProtein) {
         MealsBuilder.buildMeals();
         this.mealGenerator = new MealGenerator(
-                MealsBuilder.BREAKFAST_OPTIONS, MealsBuilder.LUNCH_OPTIONS, MealsBuilder.DINNER_OPTIONS, MealsBuilder.SNACK_OPTIONS,
+                List.of(MealsBuilder.BREAKFAST_OPTIONS, MealsBuilder.LUNCH_OPTIONS, MealsBuilder.DINNER_OPTIONS, MealsBuilder.SNACK_OPTIONS),
                 minCalories, maxCalories, maxTotalFat, minProtein
         );
     }

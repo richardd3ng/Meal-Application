@@ -9,6 +9,22 @@ import java.util.List;
 import java.util.Map;
 
 public class MealGenerator {
+
+    private class FoodPlan {
+        List<FoodInterface> foodItems;
+        double calories;
+        double totalFat;
+        double protein;
+
+        public FoodPlan(List<FoodInterface> foodItems, double calories, double totalFat, double protein) {
+            this.foodItems = foodItems;
+            this.calories = calories;
+            this.totalFat = totalFat;
+            this.protein = protein;
+        }
+
+    }
+
     private static final int BREAKFAST_INDEX = 0;
     private static final int LUNCH_INDEX = 1;
     private static final int DINNER_INDEX = 2;
@@ -22,71 +38,59 @@ public class MealGenerator {
 
     private List<List<List<FoodInterface>>> combinations;
 
-    public MealGenerator(List<FoodInterface> breakfastOptions, List<FoodInterface> lunchOptions, List<FoodInterface> dinnerOptions, List<FoodInterface> snackOptions,
-                         int minCalories, int maxCalories, int maxTotalFat, int minProtein) {
+    public MealGenerator(List<List<FoodInterface>> options, int minCalories, int maxCalories, int maxTotalFat, int minProtein) {
         this.combinations = new ArrayList<>();
-        generateCombinations(breakfastOptions, lunchOptions, dinnerOptions, snackOptions,
-                minCalories, maxCalories, maxTotalFat, minProtein, 0, 0, 0,
-                0, 0, 0, 0, BREAKFAST_INDEX,
-                new ArrayList<>(), new ArrayList<>());
+        generateCombinations(options, minCalories, maxCalories, maxTotalFat, minProtein, 0, 0, 0, 0,
+                new ArrayList<>());
     }
 
-    private void generateCombinations(List<FoodInterface> breakfastOptions, List<FoodInterface> lunchOptions, List<FoodInterface> dinnerOptions, List<FoodInterface> snackOptions,
-                                      int minCalories, int maxCalories, int maxTotalFat, int minProtein, double currCalories, double currTotalFat, double currProtein,
-                                      int breakfastIdx, int lunchIdx, int dinnerIdx, int snackIdx, int mealIdx,
-                                      List<FoodInterface> currMeal, List<List<FoodInterface>> currDay) {
-        if (mealIdx > SNACK_INDEX + 1 || currDay.size() > 4) {
+    private void generateCombinations(List<List<FoodInterface>> mealOptions, int minCalories, int maxCalories, int maxTotalFat, int minProtein,
+                                      double currCalories, double currTotalFat, double currProtein, int mealIdx, List<List<FoodInterface>> currMealPlan) {
+        if (currCalories > maxCalories || currTotalFat > maxTotalFat) {
             return;
         }
-        if (minCalories <= currCalories && currCalories <= maxCalories && currTotalFat <= maxTotalFat && currProtein >= minProtein && currDay.size() == 4) {
-            combinations.add(new ArrayList<>(currDay));
+        if (currMealPlan.size() == 4 && currCalories >= minCalories && currCalories <= maxCalories && currTotalFat <= maxTotalFat && currProtein >= minProtein) {
+            combinations.add(new ArrayList<>(currMealPlan));
         }
-        List<FoodInterface> options = new ArrayList<>();
-        int startingIdx = 0;
-        switch (mealIdx) {
-            case BREAKFAST_INDEX -> {
-                options = breakfastOptions;
-                startingIdx = breakfastIdx;
-            }
-            case LUNCH_INDEX -> {
-                options = lunchOptions;
-                startingIdx = lunchIdx;
-            }
-            case DINNER_INDEX -> {
-                options = dinnerOptions;
-                startingIdx = dinnerIdx;
-            }
-            case SNACK_INDEX -> {
-                options = snackOptions;
-                startingIdx = snackIdx;
+        for (int i = mealIdx; i < mealOptions.size(); i++) {
+            List<FoodPlan> foodPlans = new ArrayList<>();
+            generateSubsetsForOneMeal(mealOptions.get(i), minCalories, maxCalories, maxTotalFat, minProtein,
+                    currCalories, currTotalFat, currProtein, 0, new ArrayList<>(), foodPlans);
+
+            for (FoodPlan foodPlan : foodPlans) {
+                currMealPlan.add(new ArrayList<>(foodPlan.foodItems));
+                currCalories += foodPlan.calories;
+                currTotalFat += foodPlan.totalFat;
+                currProtein += foodPlan.protein;
+                generateCombinations(mealOptions, minCalories, maxCalories, maxTotalFat, minProtein,
+                        currCalories, currTotalFat, currProtein, i + 1, currMealPlan);
+                currProtein -= foodPlan.protein;
+                currTotalFat -= foodPlan.totalFat;
+                currCalories -= foodPlan.calories;
+                currMealPlan.remove(currMealPlan.size() - 1);
             }
         }
-        for (int i = startingIdx; i < options.size(); i++) {
-            FoodInterface foodItem = options.get(i);
-            currMeal.add(foodItem);
-            currCalories += foodItem.getCalories();
-            currProtein += foodItem.getProtein();
-            currTotalFat += foodItem.getTotalFat();
-            int nextBreakFastIdx = mealIdx == BREAKFAST_INDEX ? i + 1 : i;
-            int nextLunchIdx = mealIdx == LUNCH_INDEX ? i + 1 : i;
-            int nextDinnerIdx = mealIdx == DINNER_INDEX ? i + 1 : i;
-            int nextSnackIdx = mealIdx == SNACK_INDEX ? i + 1 : i;
-            generateCombinations(options, lunchOptions, dinnerOptions, snackOptions,
-                    minCalories, maxCalories, maxTotalFat, minProtein, currCalories, currTotalFat, currProtein,
-                    nextBreakFastIdx, nextLunchIdx, nextDinnerIdx, nextSnackIdx, mealIdx,
-                    currMeal, currDay);
-            if (currMeal.size() > 0) {
-                currDay.add(new ArrayList<>(currMeal));
-                generateCombinations(options, lunchOptions, dinnerOptions, snackOptions,
-                        minCalories, maxCalories, maxTotalFat, minProtein, currCalories, currTotalFat, currProtein,
-                        breakfastIdx, lunchIdx, dinnerIdx, snackIdx, mealIdx + 1,
-                        new ArrayList<>(), currDay);
-                currDay.remove(currDay.size() - 1);
-            }
-            currTotalFat -= foodItem.getTotalFat();
-            currProtein -= foodItem.getProtein();
-            currCalories -= foodItem.getCalories();
-            currMeal.remove(currMeal.size() - 1);
+    }
+
+    private void generateSubsetsForOneMeal(List<FoodInterface> foodOptions, int minCalories, int maxCalories, int maxTotalFat, int minProtein,
+                                           double currCalories, double currTotalFat, double currProtein, int foodIdx, List<FoodInterface> currFoodItems, List<FoodPlan> foodPlans) {
+        if (currCalories > maxCalories || currTotalFat > maxTotalFat) {
+            return;
+        }
+        if (!currFoodItems.isEmpty() && currCalories >= minCalories && currCalories <= maxCalories && currTotalFat <= maxTotalFat && currProtein >= minProtein) {
+            foodPlans.add(new FoodPlan(new ArrayList<>(currFoodItems), currCalories, currTotalFat, currProtein));
+        }
+        for (int i = foodIdx; i < foodOptions.size(); i++) {
+            currFoodItems.add(foodOptions.get(i));
+            currCalories += foodOptions.get(i).getCalories();
+            currTotalFat += foodOptions.get(i).getTotalFat();
+            currProtein += foodOptions.get(i).getProtein();
+            generateSubsetsForOneMeal(foodOptions, minCalories, maxCalories, maxTotalFat, minProtein,
+                    currCalories, currTotalFat, currProtein, i + 1, currFoodItems, foodPlans);
+            currProtein -= foodOptions.get(i).getProtein();
+            currTotalFat -= foodOptions.get(i).getTotalFat();
+            currCalories -= foodOptions.get(i).getCalories();
+            currFoodItems.remove(currFoodItems.size() - 1);
         }
     }
 
@@ -129,8 +133,6 @@ public class MealGenerator {
         }
         System.out.print("}");
     }
-
-
 
     private void printCombination(List<List<FoodInterface>> combination) {
         FoodInterface breakfast = makeMeal(BREAKFAST_DESCRIPTION, combination.get(BREAKFAST_INDEX));
